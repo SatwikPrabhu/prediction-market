@@ -448,6 +448,17 @@ cast send $ORACLE_MANAGER "pushResolutionToMarket(address,uint256)" $MARKET_ADDR
 
 For testnet deployment to Base Sepolia, see below or [TESTNET_DEPLOYMENT.md](TESTNET_DEPLOYMENT.md).
 
+### Live Testnet Addresses (Base Sepolia)
+
+- Network: Base Sepolia (Chain ID: 84532)
+- Admin: `0x18edea7C4d6158a7c9CE30EC214FEf04CE83538B`
+- USDToken: `0x01D6251710F97DDc9650342d3d5EFB076975fbFC`
+- PredictionMarket: `0x40D5f68295222a37afE4811854D4d115F94f4Bf2`
+
+Explorer links:
+- USDToken: https://sepolia.basescan.org/address/0x01D6251710F97DDc9650342d3d5EFB076975fbFC
+- PredictionMarket: https://sepolia.basescan.org/address/0x40D5f68295222a37afE4811854D4d115F94f4Bf2
+
 ### Step-by-step Deployment (Base Sepolia)
 
 Prereqs:
