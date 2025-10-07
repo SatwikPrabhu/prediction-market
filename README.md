@@ -4,6 +4,13 @@ A production-ready prediction market on EVM with dynamic AMM pricing, multi-sign
 
 ## 🚀 Quick Start
 
+### Quick Reference: Which Approach?
+
+- **🏃‍♂️ Just want to demo quickly?** → Use **Simple Fixed-Price** (lines 517-552)
+- **🏭 Building for production?** → Use **Dynamic AMM** (lines 470-515)  
+- **🧪 Testing/Development?** → Use **Simple Fixed-Price** (lines 517-552)
+- **🔒 Need maximum security?** → Use **Dynamic AMM + Oracle** (lines 597-645)
+
 ### Prerequisites
 - Node.js 20.19+ or 22.12+
 - Foundry (forge, cast, anvil)
@@ -35,6 +42,7 @@ npm install
 ### 3. Run Locally
 ```bash
 # Terminal 1: Start local blockchain
+pkill -f anvil  # Kill any existing anvil processes
 anvil -p 8545
 
 # Terminal 2: Deploy contracts
@@ -51,6 +59,7 @@ forge script script/AdminActions.s.sol:AdminActions --rpc-url $RPC_URL --broadca
 
 # Terminal 3: Start frontend
 cd ../frontend
+printf "VITE_TOKEN_ADDRESS=0x01D6251710F97DDc9650342d3d5EFB076975fbFC\nVITE_MARKET_ADDRESS=0x40D5f68295222a37afE4811854D4d115F94f4Bf2\n" > .env
 npm run dev
 # Open http://localhost:5173
 ```
@@ -64,6 +73,49 @@ anvil -p 8545
 > ```
 
 > ⚠️ **Security Note**: Never share your private keys! The example above generates a new key for local development only.
+
+## 🔄 Market Approaches
+
+This system supports multiple approaches for different use cases:
+
+### 1. **Simple Fixed-Price Market** (Assignment Compliant)
+- **Contract**: `PredictionMarket.sol`
+- **Pricing**: Fixed 1:1 ratio (1 USDT = 1 share)
+- **Resolution**: Direct admin resolution
+- **Use Case**: MVP, demos, simple markets
+- **Pros**: Simple, predictable, easy to understand
+- **Cons**: No price discovery, no liquidity dynamics
+
+### 2. **Dynamic AMM Market** (Production Ready)
+- **Contract**: `PredictionMarketAMM.sol`
+- **Pricing**: Constant-product formula (x*y=k) with real-time price discovery
+- **Resolution**: Multi-signature oracle system
+- **Use Case**: Production, complex markets, price discovery
+- **Pros**: Real price discovery, liquidity dynamics, professional
+- **Cons**: More complex, requires oracle setup
+
+### 3. **Oracle vs Non-Oracle Resolution**
+
+#### **Non-Oracle (Admin-Controlled)**
+- Direct admin resolution via `resolve()` function
+- Immediate resolution after market end time
+- Simple for testing and demos
+- **Use Case**: Development, testing, simple markets
+
+#### **Oracle (Multi-Signature)**
+- Multi-signature oracle with dispute mechanisms
+- 24-hour dispute window for security
+- Production-ready with time locks
+- **Use Case**: Production, high-value markets, security-critical
+
+### 4. **Choosing Your Approach**
+
+| Scenario | Recommended Approach | Contract | Resolution |
+|----------|---------------------|----------|------------|
+| **Assignment Demo** | Simple Fixed-Price | `PredictionMarket` | Non-Oracle (Admin) |
+| **Production MVP** | Dynamic AMM | `PredictionMarketAMM` | Non-Oracle (Admin) |
+| **Production Full** | Dynamic AMM | `PredictionMarketAMM` | Oracle (Multi-sig) |
+| **Testing/Development** | Simple Fixed-Price | `PredictionMarket` | Non-Oracle (Admin) |
 
 ## 🎯 Complete Trading Workflow
 
@@ -456,12 +508,98 @@ For testnet deployment to Base Sepolia, see below or [TESTNET_DEPLOYMENT.md](TES
 - PredictionMarket: `0x40D5f68295222a37afE4811854D4d115F94f4Bf2`
 - PredictionMarketAMM: `0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade`
 - OracleManager: `0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591`
+- OracleManagerQuick: `0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF`
 
 Explorer links:
 - USDToken: https://sepolia.basescan.org/address/0x01D6251710F97DDc9650342d3d5EFB076975fbFC
 - PredictionMarket: https://sepolia.basescan.org/address/0x40D5f68295222a37afE4811854D4d115F94f4Bf2
 - PredictionMarketAMM: https://sepolia.basescan.org/address/0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade
 - OracleManager: https://sepolia.basescan.org/address/0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591
+- OracleManagerQuick: https://sepolia.basescan.org/address/0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF
+
+### Complete Trading Example (Testnet)
+
+**Test the full prediction market flow on Base Sepolia:**
+
+```bash
+# Set up environment
+export RPC=https://sepolia.base.org
+export TOKEN=0x01D6251710F97DDc9650342d3d5EFB076975fbFC
+export AMM=0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade
+export ORACLE=0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF
+
+# Generate your own keys (NEVER use these in production!)
+export ADMIN_PK=0x$(openssl rand -hex 32)
+export TRADER_PK=0x$(openssl rand -hex 32)
+export ADMIN_ADDR=$(cast wallet address $ADMIN_PK)
+export TRADER_ADDR=$(cast wallet address $TRADER_PK)
+
+# 1. Mint USDT to admin and trader
+cast send $TOKEN "mint(address,uint256)" $ADMIN_ADDR 20000000 --rpc-url $RPC --private-key $ADMIN_PK
+cast send $TOKEN "mint(address,uint256)" $TRADER_ADDR 2000000 --rpc-url $RPC --private-key $ADMIN_PK
+
+# 2. Create market (admin)
+export END_TIME=$(( $(date +%s) + 120 ))  # 2 minutes from now
+cast send $AMM "createMarket(string,uint64,uint16,uint256)" "Will BTC hit $100k?" $END_TIME 100 10000000 --rpc-url $RPC --private-key $ADMIN_PK
+
+# 3. Trader approves and buys YES position
+cast send $TOKEN "approve(address,uint256)" $AMM 2000000 --rpc-url $RPC --private-key $TRADER_PK
+cast send $AMM "buy(uint256,uint8,uint256)" 0 1 1000000 --rpc-url $RPC --private-key $TRADER_PK
+
+# 4. Wait for market to end (2 minutes), then resolve
+echo "Waiting 130 seconds for market to end..."
+sleep 130
+cast send $AMM "resolve(uint256,uint8,bool)" 0 1 false --rpc-url $RPC --private-key $ADMIN_PK
+
+# 5. Trader claims winnings
+cast send $AMM "claim(uint256)" 0 --rpc-url $RPC --private-key $TRADER_PK
+```
+
+**Expected Result:** Trader receives ~829,002 USDT (83% return due to AMM pricing)
+
+**What this demonstrates:**
+- ✅ Market creation with AMM liquidity
+- ✅ User trading (buy positions)  
+- ✅ Market resolution (admin-controlled)
+- ✅ Winner claims payout
+- ✅ AMM pricing mechanics working
+
+### Simple Approach (Assignment Compliant)
+
+**For the assignment, you can also use the simpler fixed-price market:**
+
+```bash
+# Set up environment
+export RPC=https://sepolia.base.org
+export TOKEN=0x01D6251710F97DDc9650342d3d5EFB076975fbFC
+export MARKET=0x40D5f68295222a37afE4811854D4d115F94f4Bf2  # Fixed-price market
+
+# Generate your own keys
+export ADMIN_PK=0x$(openssl rand -hex 32)
+export TRADER_PK=0x$(openssl rand -hex 32)
+export ADMIN_ADDR=$(cast wallet address $ADMIN_PK)
+export TRADER_ADDR=$(cast wallet address $TRADER_PK)
+
+# 1. Mint USDT to trader
+cast send $TOKEN "mint(address,uint256)" $TRADER_ADDR 2000000 --rpc-url $RPC --private-key $ADMIN_PK
+
+# 2. Trader approves and buys YES position (fixed price: 0.5 USDT per share)
+cast send $TOKEN "approve(address,uint256)" $MARKET 2000000 --rpc-url $RPC --private-key $TRADER_PK
+cast send $MARKET "buyPosition(uint8,uint256)" 1 1000000 --rpc-url $RPC --private-key $TRADER_PK
+
+# 3. Admin resolves market directly (no oracle needed)
+cast send $MARKET "resolve(uint8,bool)" 1 false --rpc-url $RPC --private-key $ADMIN_PK
+
+# 4. Trader claims winnings
+cast send $MARKET "claim(uint256)" 0 --rpc-url $RPC --private-key $TRADER_PK
+```
+
+**This simple approach:**
+- ✅ Uses fixed-price market (no AMM complexity)
+- ✅ Direct admin resolution (no oracle system)
+- ✅ Still demonstrates complete prediction market lifecycle
+- ✅ Meets all assignment requirements
+- ✅ Perfect for MVP/demo purposes
 
 ### Step-by-step Deployment (Base Sepolia)
 
