@@ -348,25 +348,35 @@ npx -y @mermaid-js/mermaid-cli -i docs/diagrams/claim-sequence.mmd -o docs/diagr
 
 ## Contract Addresses
 
-### Local Anvil (Development)
+### 📍 **Address Types Explained**
+
+This repository contains **three types of addresses**:
+
+1. **🏠 Local Development** - Anvil addresses (for local testing)
+2. **📝 Example Addresses** - From deployment scripts (for reference)
+3. **🌐 Live Testnet** - Actually deployed contracts (for real testing)
+
+### 🎯 **Quick Reference**
+
+| Type | Purpose | Status | Use For |
+|------|---------|--------|---------|
+| **🏠 Local** | Development | ✅ Working | Local testing with Anvil |
+| **🌐 Live Testnet** | Real Testing | ✅ Deployed | Testing on Base Sepolia |
+| **📝 Examples** | Reference | 📖 Scripts | Understanding deployment |
+
+> **💡 For immediate testing**: Use the **Live Testnet addresses** below - they're already deployed and ready to use!
+
+### 🏠 Local Anvil (Development)
 - **USDToken**: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
 - **PredictionMarket**: `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`
 - **Sample Market**: ID 0 ("Will BTC > $60k by EOM?") - **RESOLVED: YES wins**
 
-### Base Sepolia Testnet (Deployed)
+### 📝 Example Addresses (From Scripts)
+> **Note**: These are example addresses from deployment scripts, not live contracts.
+
 - **Network**: Base Sepolia (Chain ID: 84532)
 - **RPC URL**: https://sepolia.base.org
 - **Block Explorer**: https://sepolia.basescan.org
-- **Addresses**:
-  - **USDToken**: `0x5D8ADBEbA43d97A00309dE7E5Ae629e528235a82`
-  - **PredictionMarketAMM**: `0xa67B41bCF1a1885880D9f1250157dD24916385c3`
-  - **OracleManager**: `0x4D7BBbaebD007c94D3D5410DD5D9c292f9b99C97`
-  - **Example market IDs**: `0`
-
-  BaseScan links:
-  - USDToken: https://sepolia.basescan.org/address/0x5D8ADBEbA43d97A00309dE7E5Ae629e528235a82
-  - PredictionMarketAMM: https://sepolia.basescan.org/address/0xa67B41bCF1a1885880D9f1250157dD24916385c3
-  - OracleManager: https://sepolia.basescan.org/address/0x4D7BBbaebD007c94D3D5410DD5D9c292f9b99C97
 
 ## Setup & Run
 
@@ -500,33 +510,39 @@ cast send $ORACLE_MANAGER "pushResolutionToMarket(address,uint256)" $MARKET_ADDR
 
 For testnet deployment to Base Sepolia, see below or [TESTNET_DEPLOYMENT.md](TESTNET_DEPLOYMENT.md).
 
-### Live Testnet Addresses (Base Sepolia)
+### 🌐 Live Testnet Addresses (Base Sepolia) ✅
 
-- Network: Base Sepolia (Chain ID: 84532)
-- Admin: `0x18edea7C4d6158a7c9CE30EC214FEf04CE83538B`
-- USDToken: `0x01D6251710F97DDc9650342d3d5EFB076975fbFC`
-- PredictionMarket: `0x40D5f68295222a37afE4811854D4d115F94f4Bf2`
-- PredictionMarketAMM: `0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade`
-- OracleManager: `0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591`
-- OracleManagerQuick: `0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF`
+> **✅ These are the ACTUAL deployed contracts on Base Sepolia testnet**
 
-Explorer links:
-- USDToken: https://sepolia.basescan.org/address/0x01D6251710F97DDc9650342d3d5EFB076975fbFC
-- PredictionMarket: https://sepolia.basescan.org/address/0x40D5f68295222a37afE4811854D4d115F94f4Bf2
-- PredictionMarketAMM: https://sepolia.basescan.org/address/0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade
-- OracleManager: https://sepolia.basescan.org/address/0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591
-- OracleManagerQuick: https://sepolia.basescan.org/address/0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF
+- **Network**: Base Sepolia (Chain ID: 84532)
+- **RPC URL**: https://sepolia.base.org
+- **Block Explorer**: https://sepolia.basescan.org
+- **Admin**: `0x18edea7C4d6158a7c9CE30EC214FEf04CE83538B`
+
+#### **Core Contracts**
+- **USDToken**: `0x01D6251710F97DDc9650342d3d5EFB076975fbFC`
+  - [View on BaseScan](https://sepolia.basescan.org/address/0x01D6251710F97DDc9650342d3d5EFB076975fbFC)
+- **PredictionMarket** (Fixed-Price): `0x40D5f68295222a37afE4811854D4d115F94f4Bf2`
+  - [View on BaseScan](https://sepolia.basescan.org/address/0x40D5f68295222a37afE4811854D4d115F94f4Bf2)
+- **PredictionMarketAMM** (Dynamic AMM): `0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade`
+  - [View on BaseScan](https://sepolia.basescan.org/address/0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade)
+
+#### **Oracle System**
+- **OracleManager** (Multi-Sig): `0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591`
+  - [View on BaseScan](https://sepolia.basescan.org/address/0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591)
+- **OracleManagerQuick** (Simple): `0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF`
+  - [View on BaseScan](https://sepolia.basescan.org/address/0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF)
 
 ### Complete Trading Example (Testnet)
 
 **Test the full prediction market flow on Base Sepolia:**
 
 ```bash
-# Set up environment
+# Set up environment (using LIVE testnet addresses)
 export RPC=https://sepolia.base.org
-export TOKEN=0x01D6251710F97DDc9650342d3d5EFB076975fbFC
-export AMM=0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade
-export ORACLE=0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF
+export TOKEN=0x01D6251710F97DDc9650342d3d5EFB076975fbFC  # Live USDToken
+export AMM=0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade    # Live AMM
+export ORACLE=0xb3BC0C4662Cb5cDcb07d1718DF1c4C10fa6fA4bF  # Live Oracle
 
 # Generate your own keys (NEVER use these in production!)
 export ADMIN_PK=0x$(openssl rand -hex 32)
@@ -569,10 +585,10 @@ cast send $AMM "claim(uint256)" 0 --rpc-url $RPC --private-key $TRADER_PK
 **For the assignment, you can also use the simpler fixed-price market:**
 
 ```bash
-# Set up environment
+# Set up environment (using LIVE testnet addresses)
 export RPC=https://sepolia.base.org
-export TOKEN=0x01D6251710F97DDc9650342d3d5EFB076975fbFC
-export MARKET=0x40D5f68295222a37afE4811854D4d115F94f4Bf2  # Fixed-price market
+export TOKEN=0x01D6251710F97DDc9650342d3d5EFB076975fbFC  # Live USDToken
+export MARKET=0x40D5f68295222a37afE4811854D4d115F94f4Bf2  # Live Fixed-price market
 
 # Generate your own keys
 export ADMIN_PK=0x$(openssl rand -hex 32)
@@ -631,7 +647,8 @@ Outputs include `USDToken` and `PredictionMarket` addresses.
 
 3) Deploy AMM market using existing token and seed liquidity
 ```bash
-export TOKEN_ADDRESS=0x5D8ADBEbA43d97A00309dE7E5Ae629e528235a82
+# NOTE: These are EXAMPLE addresses from deployment scripts
+export TOKEN_ADDRESS=0x5D8ADBEbA43d97A00309dE7E5Ae629e528235a82  # Example token
 
 # Mint some USDT to admin for initial liquidity (6 decimals; example 1,000 USDT)
 cast send $TOKEN_ADDRESS "mint(address,uint256)" $ADMIN_ADDRESS 1000000000 \
@@ -642,6 +659,7 @@ forge script script/DeployAMM.s.sol:DeployAMM \
   --broadcast
 
 # Resulting AMM example: 0xa67B41bCF1a1885880D9f1250157dD24916385c3 (market id 0 created)
+# NOTE: This is an EXAMPLE address - use the LIVE addresses above for actual testing
 ```
 
 4) Deploy OracleManager, wire AMM to it, and register market
