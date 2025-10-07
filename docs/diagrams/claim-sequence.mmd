@@ -1,0 +1,23 @@
+sequenceDiagram
+  autonumber
+  participant Admin as Admin / OracleManager
+  participant PM as PredictionMarketAMM
+  participant Frontend as Frontend (wagmi/viem)
+  participant User
+  participant USD as USDToken (ERC-20)
+
+  Admin->>PM: resolveFromOracle(id, outcome, invalid)
+  PM->>PM: mark resolved, set winner/invalid
+  Note over PM: Resolved event emitted
+  User->>Frontend: Click Claim
+  Frontend->>PM: claim(id)
+  alt invalid market
+    PM->>PM: compute refund (YES+NO)
+  else winning YES/NO
+    PM->>PM: compute payout (winning balance)
+  end
+  PM->>USD: transfer(user, payout)
+  PM-->>Frontend: Claimed event
+  Frontend-->>User: Show payout, update balances
+
+

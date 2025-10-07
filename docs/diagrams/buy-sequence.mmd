@@ -1,0 +1,26 @@
+sequenceDiagram
+  autonumber
+  participant User
+  participant Frontend as Frontend (wagmi/viem)
+  participant USD as USDToken (ERC-20)
+  participant PM as PredictionMarketAMM
+  participant RPC as RPC Provider
+
+  User->>Frontend: Connect wallet
+  Frontend->>USD: allowance(user, PM)
+  alt allowance < amount
+    User->>Frontend: Click Approve
+    Frontend->>USD: approve(PM, max)
+    USD-->>Frontend: Tx hash
+    Frontend->>RPC: wait for receipt
+    RPC-->>Frontend: Approval confirmed
+  end
+  User->>Frontend: Enter amount + outcome, Click Buy
+  Frontend->>PM: buy(marketId, outcome, amount)
+  PM->>USD: transferFrom(user, PM, amount)
+  PM->>PM: apply AMM pricing, update pools
+  PM->>PM: credit user YES/NO shares
+  PM-->>Frontend: Bought event
+  Frontend-->>User: Update balances/prices
+
+

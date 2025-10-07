@@ -1,0 +1,47 @@
+flowchart LR
+  subgraph UserSide[User Side]
+    U["End User (Wallet)"]
+    FE["Frontend: React + wagmi/viem + RainbowKit"]
+    U -- connect/sign --> FE
+  end
+
+  subgraph Infra[Chain & Infra]
+    RPC["JSON-RPC Provider (Base Sepolia)"]
+    Explorer[BaseScan]
+  end
+
+  subgraph OnChain[On-Chain Contracts]
+    PM["PredictionMarketAMM\n- createMarket\n- buy(YES/NO)\n- getCurrentPrice\n- claim\n- withdrawFees"]
+    USD["USDToken (ERC-20)"]
+    OM["OracleManager\n- finalize outcome\n- pushResolutionToMarket"]
+  end
+
+  subgraph AdminOps[Admin / Ops]
+    Admin["Admin / Multisig"]
+    Scripts["Foundry Scripts\nDeploy/TestnetSetup"]
+  end
+
+  %% Frontend <-> Chain
+  FE -- read/write --> RPC
+  RPC <-- tx/status --> Explorer
+
+  %% Contract interactions
+  RPC --> PM
+  PM <--> USD
+  OM --> PM:::resolve
+
+  %% Admin wiring
+  Admin -. grant roles .-> PM
+  Admin -. register market .-> OM
+  Scripts -. deploy & seed .-> PM
+  Scripts -. deploy .-> USD
+  Scripts -. deploy .-> OM
+
+  %% User flows
+  U == "approve(USD->PM)" ==> USD
+  U == "buy(YES/NO)" ==> PM
+  U == "claim()" ==> PM
+
+  classDef resolve fill:#334155,stroke:#94a3b8,color:#e2e8f0
+
+
