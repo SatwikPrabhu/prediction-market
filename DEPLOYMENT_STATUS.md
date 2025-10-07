@@ -101,6 +101,10 @@ To complete the testnet deployment (requires user action):
   BaseScan: https://sepolia.basescan.org/address/0x01D6251710F97DDc9650342d3d5EFB076975fbFC
 - **PredictionMarket**: `0x40D5f68295222a37afE4811854D4d115F94f4Bf2`  
   BaseScan: https://sepolia.basescan.org/address/0x40D5f68295222a37afE4811854D4d115F94f4Bf2
+- **PredictionMarketAMM**: `0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade`  
+  BaseScan: https://sepolia.basescan.org/address/0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade
+- **OracleManager**: `0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591`  
+  BaseScan: https://sepolia.basescan.org/address/0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591
 
 Note: AMM and OracleManager addresses will be added if/when deployed for AMM mode.
 

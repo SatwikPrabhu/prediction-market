@@ -454,10 +454,14 @@ For testnet deployment to Base Sepolia, see below or [TESTNET_DEPLOYMENT.md](TES
 - Admin: `0x18edea7C4d6158a7c9CE30EC214FEf04CE83538B`
 - USDToken: `0x01D6251710F97DDc9650342d3d5EFB076975fbFC`
 - PredictionMarket: `0x40D5f68295222a37afE4811854D4d115F94f4Bf2`
+- PredictionMarketAMM: `0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade`
+- OracleManager: `0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591`
 
 Explorer links:
 - USDToken: https://sepolia.basescan.org/address/0x01D6251710F97DDc9650342d3d5EFB076975fbFC
 - PredictionMarket: https://sepolia.basescan.org/address/0x40D5f68295222a37afE4811854D4d115F94f4Bf2
+- PredictionMarketAMM: https://sepolia.basescan.org/address/0x77f74387c34DfAcDCf25B17196c1f0fFCD547ade
+- OracleManager: https://sepolia.basescan.org/address/0xAFfdd388194AA4AD0CbB9C9486f22ADc10994591
 
 ### Step-by-step Deployment (Base Sepolia)
 
