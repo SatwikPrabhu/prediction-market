@@ -1,0 +1,10 @@
+.DS_Store
+node_modules/
+.env
+contracts/.env
+frontend/.env
+out/
+contracts/cache/
+contracts/broadcast/
+dist/
+*.log
